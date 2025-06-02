@@ -233,3 +233,341 @@ Abrir [http://localhost:3000](http://localhost:3000) en el navegador.
 - **Pagos:** MercadoPago API
 - **Estilos:** Tailwind CSS
 - **Certificados:** Generación automática de PDFs
+# 📚 Sistema de Gestión de Cursos
+
+FlorcitaNails Academy permite a los administradores crear y gestionar cursos de forma completa, incluyendo la creación de cursos, capítulos, carga de contenido multimedia y gestión del progreso estudiantil.
+
+## 🎯 Características Principales
+
+### **Tipos de Cursos**
+- **Cursos Online**: Completamente virtuales con certificación automática
+- **Cursos Presenciales**: Combinan material online con prácticas presenciales
+- **Cursos Gratuitos**: Sin costo para el usuario
+- **Cursos de Pago**: Integrados con MercadoPago
+
+### **Niveles de Curso**
+- Principiante
+- Intermedio  
+- Avanzado
+
+### **Categorías Disponibles**
+- Técnicas de Uñas
+- Arte en Uñas
+- Decoración
+- Cuidado y Salud
+
+## 🏗️ Arquitectura del Sistema
+
+### Modelo de Base de Datos
+
+#### **Course Model**
+```prisma
+model Course {
+  id          String   @id @default(cuid())
+  userId      String  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String   @db.Text
+  slug        String   @unique @db.Text
+  description String?  @db.Text
+  imageUrl    String?  @db.Text
+  price       String   @default("gratis")
+  isPublished Boolean  @default(false)
+  level       String?  @db.Text
+  category    String?  @db.Text
+  chapters    Chapter[]
+  purchases   Purchase[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+```
+
+#### **Chapter Model**
+```prisma
+model Chapter {
+  id          String   @id @default(cuid())
+  title       String
+  description String?  @db.Text
+  videoUrl    String?  @db.Text
+  documentUrl String?  @db.Text
+  position    Int
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  isfree      Boolean  @default(false)
+  isPublished Boolean  @default(false)
+  userProgress UserProgress[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+```
+
+#### **UserProgress Model**
+```prisma
+model UserProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  chapterId   String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chapter     Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  isCompleted Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, chapterId])
+}
+```
+
+#### **Purchase Model**
+```prisma
+model Purchase {
+  id          String   @id @default(cuid())
+  userId      String
+  courseId    String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  price       Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, courseId])
+}
+```
+
+## 🔧 API Endpoints
+
+### **Gestión de Cursos (Admin)**
+
+#### Crear Nuevo Curso
+```http
+POST /api/courses/teacher
+```
+
+**Headers:**
+```
+Authorization: Bearer [token]
+Content-Type: application/json
+```
+
+**Body:**
+```json
+{
+  "title": "Técnicas Básicas de Manicure",
+  "slug": "tecnicas-basicas-manicure"
+}
+```
+
+**Response (201):**
+```json
+{
+  "id": "clp5h8z7q0000...",
+  "userId": "clp5h8z7q0001...",
+  "title": "Técnicas Básicas de Manicure",
+  "slug": "tecnicas-basicas-manicure",
+  "description": null,
+  "imageUrl": null,
+  "price": "gratis",
+  "isPublished": false,
+  "level": null,
+  "category": null,
+  "createdAt": "2024-01-15T10:30:00.000Z",
+  "updatedAt": "2024-01-15T10:30:00.000Z"
+}
+```
+
+#### Actualizar Curso
+```http
+PATCH /api/courses/teacher/[slug]
+```
+
+**Body (campos opcionales):**
+```json
+{
+  "title": "Técnicas Avanzadas de Manicure",
+  "description": "Aprende las técnicas más avanzadas...",
+  "imageUrl": "https://utfs.io/f/abc123.jpg",
+  "price": "50000",
+  "level": "intermedio",
+  "category": "Técnicas de Uñas",
+  "isPublished": true
+}
+```
+
+#### Eliminar Curso
+```http
+DELETE /api/courses/teacher/[slug]
+```
+
+**Proceso de eliminación:**
+1. Busca el curso por slug y verifica permisos
+2. Elimina imagen asociada de UploadThing
+3. Elimina curso y todos sus capítulos (cascada)
+4. Retorna confirmación
+
+### **Gestión de Capítulos**
+
+#### Crear Capítulo
+```http
+POST /api/courses/teacher/[slug]/chapters
+```
+
+**Body:**
+```json
+{
+  "title": "Introducción a las Técnicas Básicas"
+}
+```
+
+**Proceso:**
+1. Verifica permisos de administrador
+2. Busca el curso por slug
+3. Calcula la posición del nuevo capítulo
+4. Crea capítulo con posición automática
+
+**Response (201):**
+```json
+{
+  "id": "clp5h8z7q0002...",
+  "title": "Introducción a las Técnicas Básicas",
+  "description": null,
+  "videoUrl": null,
+  "documentUrl": null,
+  "position": 1,
+  "courseId": "clp5h8z7q0000...",
+  "isfree": false,
+  "isPublished": false,
+  "createdAt": "2024-01-15T10:30:00.000Z",
+  "updatedAt": "2024-01-15T10:30:00.000Z"
+}
+```
+
+## 🛡️ Control de Acceso
+
+### **Roles y Permisos**
+
+#### Administrador (`role: "admin"`)
+- ✅ Crear cursos
+- ✅ Editar cualquier curso
+- ✅ Eliminar cursos
+- ✅ Gestionar capítulos
+- ✅ Publicar/despublicar contenido
+- ✅ Ver estadísticas de progreso
+
+#### Usuario Regular (`role: "user"`)
+- ✅ Ver cursos publicados
+- ✅ Comprar cursos
+- ✅ Acceder a contenido comprado
+- ✅ Marcar progreso
+- ❌ Crear/editar cursos
+
+### **Middleware de Seguridad**
+```typescript
+// Verificación en cada endpoint
+const session = await auth();
+if (!session) {
+  return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+}
+
+if (session.user.role !== "admin") {
+  return NextResponse.json({ error: "No tienes permisos" }, { status: 401 });
+}
+```
+
+## 📤 Gestión de Archivos
+
+### **UploadThing Integration**
+- **Imágenes de curso**: Portadas y thumbnails
+- **Videos**: Contenido principal de capítulos  
+- **Documentos**: Material complementario (PDFs)
+
+### **Eliminación Automática**
+```typescript
+// Al eliminar curso, se eliminan archivos asociados
+const imageUrl = courseFind.imageUrl;
+if (imageUrl) {
+  const key = imageUrl.split("/").pop();
+  if (key) {
+    await utapi.deleteFiles(key);
+  }
+}
+```
+
+## 🏃‍♂️ Flujos de Trabajo
+
+### **Creación de Curso Completo**
+
+1. **Crear Curso Base**
+   ```http
+   POST /api/courses/teacher
+   ```
+
+2. **Actualizar Información**
+   ```http
+   PATCH /api/courses/teacher/[slug]
+   ```
+
+3. **Agregar Capítulos**
+   ```http
+   POST /api/courses/teacher/[slug]/chapters
+   ```
+
+4. **Subir Contenido**
+   - Imágenes via UploadThing
+   - Videos via UploadThing
+   - Documentos via UploadThing
+
+5. **Publicar Curso**
+   ```http
+   PATCH /api/courses/teacher/[slug]
+   { "isPublished": true }
+   ```
+
+### **Experiencia del Estudiante**
+
+1. **Descubrimiento**: Lista de cursos publicados
+2. **Compra**: Integración con MercadoPago
+3. **Acceso**: Desbloqueo de contenido
+4. **Progreso**: Tracking automático
+5. **Certificación**: Generación automática al completar
+
+## 🎨 Interfaz de Administración
+
+### **Panel de Profesor** (`/teacher`)
+- Lista de cursos creados
+- Botón para crear nuevo curso
+- Acceso rápido a edición
+
+### **Editor de Curso** (`/teacher/course/[slug]`)
+- Formulario de información básica
+- Gestión de capítulos
+- Preview del curso
+- Controles de publicación
+
+### **Editor de Capítulo**
+- Formulario de contenido
+- Subida de archivos
+- Configuración de acceso
+- Preview del capítulo
+
+## 📊 Métricas y Analytics
+
+### **Datos del Curso**
+- Número de estudiantes inscritos
+- Progreso promedio de finalización
+- Valoraciones y feedback
+- Ingresos generados
+
+### **Datos del Capítulo**
+- Tiempo promedio de visualización
+- Tasa de finalización
+- Puntos de abandono
+
+## 🔄 Estados del Curso
+
+### **Draft (Borrador)**
+- `isPublished: false`
+- Solo visible para el creador
+- Permite edición completa
+
+### **Published (Publicado)**
+- `isPublished: true`
+- Visible para todos los usuarios
+- Disponible para compra/inscripción

@@ -18,15 +18,9 @@ import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { formSchema } from "@/schemas/signForm";
 
-const formSchema = z.object({
-  userEmail: z.string().email({
-    message: "Dirección de correo inválida",
-  }),
-  password: z.string().min(6, {
-    message: "La contraseña debe tener al menos 6 caracteres",
-  }),
-});
+
 
 export function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);

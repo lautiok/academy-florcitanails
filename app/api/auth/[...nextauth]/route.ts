@@ -80,10 +80,35 @@ export const authOptions: NextAuthOptions = {
           }
 
           user.id = existingUser.id;
+          user.role = existingUser.role;
+          user.image = existingUser.image;
+          user.name = existingUser.name;
         }
       }
 
       return true;
+    },
+
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.name = user.name;
+        token.email = user.email;
+        token.image = user.image;
+        token.role = user.role;
+      }
+      return token;
+    },
+
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.id as string;
+        session.user.name = token.name as string;
+        session.user.email = token.email as string;
+        session.user.image = token.image as string;
+        session.user.role = token.role as string;
+      }
+      return session;
     },
   },
   pages: {
