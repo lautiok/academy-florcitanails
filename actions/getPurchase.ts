@@ -73,3 +73,34 @@ export const getPurchasedCourses = async (
     return null;
   }
 };
+
+
+export const getPurchasedHomeCourses = async (
+  userId: string
+): Promise<(Course & { chapters: Chapter[] })[] | null> => {
+  try {
+    const purchasedCourses = await prisma.course.findMany({
+      where: {
+        isPublished: true,
+        purchases: {
+          some: {
+            userId: userId,
+          },
+        },
+      },
+      take: 4,
+      include: {
+        chapters: {
+          where: {
+            isPublished: true,
+          },
+        },
+      },
+    });
+
+    return purchasedCourses;
+  } catch (error) {
+    console.error("Error al obtener el curso de compra:", error);
+    return null;
+  }
+};

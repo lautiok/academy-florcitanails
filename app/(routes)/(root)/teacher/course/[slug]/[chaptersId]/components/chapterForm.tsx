@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Chapter, DocumentUrl, Exam, Question } from "@prisma/client";
-import { ArrowLeft, Cog, FileQuestion, Trash } from "lucide-react";
+import { ArrowLeft, Cog, FileQuestion, Pencil, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { TitleBlock } from "../../components";
 import axios from "axios";
@@ -20,6 +20,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { ExamForm } from "./examForm";
+import { useState } from "react";
+import { ExamUpdate } from "./examUpdate";
 
 export default function ChapterForm({
   chapter,
@@ -32,6 +34,7 @@ export default function ChapterForm({
   documentUrl: DocumentUrl[];
   exam: (Exam & { questions: Question[] }) | null;
 }) {
+  const [isUpdate, setIsUpdate] = useState(false);
   const router = useRouter();
 
   const onPublish = async (state: boolean) => {
@@ -200,18 +203,26 @@ export default function ChapterForm({
               </div>
             ))}
           </div>
+          <Button variant={"outline"} className="mr-6 rounded-2xl" onClick={() => setIsUpdate(true)}>
+            <Pencil className="h-4 w-4" />
+            <span className="m-2">Actualizar examen</span>
+          </Button>
           <Button
             variant="destructive"
-            className="mt-6 rounded-2xl"
+            className=" rounded-2xl"
             onClick={onDelete}
           >
             <Trash className="h-4 w-4" />
-            <span className="ml-2">Eliminar examen completo</span>
+            <span className="ml-2">Eliminar examen</span>
           </Button>
         </div>
       </div>
     ) : (
       <ExamForm chapterId={chapter.id} slug={slug} />
+    )}
+
+    {isUpdate && (
+      <ExamUpdate chapterId={chapter.id} slug={slug} exam={exam} />
     )}
   </div>
 </div>
