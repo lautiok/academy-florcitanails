@@ -112,7 +112,8 @@ model Chapter {
   title       String
   description String?  @db.Text
   videoUrl    String?  @db.Text
-  documentUrl String?  @db.Text
+  documentUrl DocumentUrl[]
+  exam        Exam[]
   position    Int
   courseId    String
   course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
@@ -125,13 +126,33 @@ model Chapter {
   @@index([courseId])
 }
 
+  model Exam {
+  id         String     @id @default(cuid())
+  chapterId  String     @unique
+  chapter    Chapter    @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  passingScore Int      @default(70)
+  questions  Question[]
+}
+
+model Question {
+  id       String   @id @default(cuid())
+  examId   String
+  exam     Exam     @relation(fields: [examId], references: [id], onDelete: Cascade)
+  text     String
+  options  String[] 
+  correct  String 
+}
+
+
+
 model UserProgress {
   id          String   @id @default(cuid())
-  userId      String
+  userId      String 
   chapterId   String
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   chapter     Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
   isCompleted Boolean  @default(false)
+  score      Float?   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -142,13 +163,26 @@ model UserProgress {
 model Purchase {
   id          String   @id @default(cuid())
   userId      String
-  courseId    String
+  courseId    String    
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   price       Float
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  @@unique([userId, courseId])
+  @@unique([userId, courseId]) 
   @@index([courseId])
+}
+
+
+model DocumentUrl {
+  id          String   @id @default(cuid())
+  title       String
+  chapterId   String
+  documentUrl String
+  chapter     Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([chapterId, documentUrl])
 }

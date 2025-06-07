@@ -1,17 +1,16 @@
 import { CourseForm, CourseHeader, CourseImage, CoursePrice } from "./components";
-import { getServerSession } from "next-auth";
 import { prisma } from "@/lib/prisma";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import ChaptersBlock from "./components/chaptersBlock";
+import { auth } from "@/lib/auth";
 
 export default async function CoursePage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const { slug } = params; 
+  const { slug } = await params;
 
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
   if (!session?.user.id) {
     return <div>No tienes sesión</div>;
@@ -19,7 +18,7 @@ export default async function CoursePage({
 
   const course = await prisma.course.findUnique({
     where: {
-      slug: slug,
+      slug,
       userId: session.user.id,
     },
     include: {
@@ -27,7 +26,7 @@ export default async function CoursePage({
         orderBy: {
           position: "asc",
         },
-      }
+      },
     },
   });
 
@@ -41,10 +40,8 @@ export default async function CoursePage({
       <CourseForm course={course} />
       <div className="grid grid-cols-1 md:grid-cols-2 my-4 gap-4">
         <CourseImage slug={slug} imageUrl={course.imageUrl} />
-
         <CoursePrice slug={slug} price={course.price} />
       </div>
-
       <ChaptersBlock slug={slug} chapters={course.chapters} />
     </div>
   );

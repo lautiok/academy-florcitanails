@@ -1,6 +1,6 @@
 "use client";
 import { DollarSign } from "lucide-react";
-import { TitleBlock } from "./titleBlock";
+import { TitleBlock } from "../../../../../../../components/Shared/titleBlock";
 import { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";

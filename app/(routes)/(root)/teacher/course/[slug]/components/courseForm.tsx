@@ -1,5 +1,5 @@
 "use client";
-import { TitleBlock } from "./titleBlock";
+import { TitleBlock } from "../../../../../../../components/Shared/titleBlock";
 import { Cog } from "lucide-react";
 import { CourseFormPropType } from "./courseForm.type";
 import { z } from "zod";
@@ -33,7 +33,13 @@ import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   title: z.string().min(3).max(100),
-  slug: z.string().min(3).max(100),
+    slug: z
+    .string()
+    .min(1, "El slug es obligatorio")
+    .regex(/^[a-z0-9-]+$/, {
+      message:
+        "El slug solo puede contener letras minúsculas, números y guiones. No se permiten espacios, ñ ni símbolos especiales.",
+    }),
   description: z.string().min(3).max(500).optional().or(z.literal("")),
   category: z.string().min(3).max(100),
   level: z.string().min(3).max(100),

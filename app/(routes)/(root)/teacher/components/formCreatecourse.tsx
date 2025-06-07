@@ -14,10 +14,20 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { formSchema } from "@/schemas/createCourseSchema";
 import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+
+export const formSchema = z.object({
+  courseName: z.string().min(1, "El nombre del curso es obligatorio"),
+  slug: z
+    .string()
+    .min(1, "El slug es obligatorio")
+    .regex(/^[a-z0-9-]+$/, {
+      message:
+        "El slug solo puede contener letras minúsculas, números y guiones. No se permiten espacios, ñ ni símbolos especiales.",
+    }),
+});
 
 export const FormCreateCourse = () => {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -31,19 +41,23 @@ export const FormCreateCourse = () => {
   const router = useRouter();
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-   try {
-     const response = await axios.post("/api/courses/teacher", {
-       title: values.courseName,
-       slug: values.slug,
-     }, {
-       withCredentials: true,
-     });
+    try {
+      const response = await axios.post(
+        "/api/courses/teacher",
+        {
+          title: values.courseName,
+          slug: values.slug,
+        },
+        {
+          withCredentials: true,
+        }
+      );
       toast("Curso creado exitosamente 🎉");
       router.push(`/teacher/course/${response.data.slug}`);
-   } catch (error) {
-     toast.error("Error al crear curso");
-     console.error("Error al crear curso:", error);
-   }
+    } catch (error) {
+      toast.error("Error al crear curso");
+      console.error("Error al crear curso:", error);
+    }
   };
 
   return (
@@ -56,14 +70,10 @@ export const FormCreateCourse = () => {
             <FormItem>
               <FormLabel>Nombre del curso</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="Inicial en acrílico"
-                  {...field}
-                />
+                <Input placeholder="Inicial en acrílico" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
-            
           )}
         />
         <FormField
@@ -73,14 +83,10 @@ export const FormCreateCourse = () => {
             <FormItem>
               <FormLabel>Slug del curso</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="inicial-acrílico"
-                  {...field}
-                />
+                <Input placeholder="inicial-acrílico" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
-            
           )}
         />
         <Button variant={"outline"} type="submit">

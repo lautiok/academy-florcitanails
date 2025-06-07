@@ -5,7 +5,6 @@ import { UTApi } from "uploadthing/server";
 
 const utapi = new UTApi();
 
-
 export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ slug: string }> }
@@ -14,8 +13,8 @@ export async function PATCH(
     const session = await auth();
     const { slug } = await params;
 
-    const values = await req.json()
-    console.log(values)
+    const values = await req.json();
+    console.log(values);
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -27,6 +26,81 @@ export async function PATCH(
       );
     }
 
+    if (values.slug) {
+      const slugRegex = /^[a-z0-9-]+$/;
+      if (!slugRegex.test(values.slug)) {
+        return NextResponse.json(
+          {
+            error:
+              "Slug no válido. Usa solo letras minúsculas, números y guiones.",
+          },
+          { status: 400 }
+        );
+      }
+    }
+
+    if (values.isPublished) {
+  const existingCourse = await prisma.course.findUnique({
+    where: {
+      slug: slug,
+      userId: session.user.id,
+    },
+    include: {
+      chapters: true,
+    },
+  });
+
+  if (!existingCourse) {
+    return NextResponse.json({ error: "Curso no encontrado." }, { status: 404 });
+  }
+
+  const { title, description, level, category, chapters } = existingCourse;
+
+  if (!title || title.trim() === "") {
+    return NextResponse.json({ error: "El título es obligatorio para publicar." }, { status: 400 });
+  }
+
+  if (!description || description.trim() === "") {
+    return NextResponse.json({ error: "La descripción es obligatoria para publicar." }, { status: 400 });
+  }
+
+  if (!level || level.trim() === "") {
+    return NextResponse.json({ error: "El nivel es obligatorio para publicar." }, { status: 400 });
+  }
+
+  if (!category || category.trim() === "") {
+    return NextResponse.json({ error: "La categoría es obligatoria para publicar." }, { status: 400 });
+  }
+
+  if (chapters.length === 0) {
+    return NextResponse.json({ error: "Debe tener al menos un capítulo para publicar." }, { status: 400 });
+  }
+}
+
+    
+
+    if (values.imageUrl) {
+      const previousCourse = await prisma.course.findUnique({
+        where: {
+          slug: slug,
+          userId: session.user.id,
+        },
+        select: {
+          imageUrl: true,
+        },
+      });
+
+      const previousImage = previousCourse?.imageUrl;
+
+      if (previousImage && previousImage !== values.imageUrl) {
+        const key = previousImage.split("/").pop();
+        if (key) {
+          console.log("Eliminando imagen con key:", key);
+          await utapi.deleteFiles(key);
+        }
+      }
+    }
+
     const course = await prisma.course.update({
       where: {
         slug: slug,
@@ -35,12 +109,13 @@ export async function PATCH(
       data: {
         ...values,
       },
-    })
+    });
     return NextResponse.json(course, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: "Error interno" }, { status: 400 });
+    return NextResponse.json({ error: "Error interno" }, { status: 500 });
   }
 }
+
 export async function DELETE(
   req: Request,
   { params }: { params: Promise<{ slug: string }> }
@@ -71,7 +146,10 @@ export async function DELETE(
     });
 
     if (!courseFind) {
-      return NextResponse.json({ error: "No hay curso con ese slug" }, { status: 400 });
+      return NextResponse.json(
+        { error: "No hay curso con ese slug" },
+        { status: 400 }
+      );
     }
 
     const imageUrl = courseFind.imageUrl;

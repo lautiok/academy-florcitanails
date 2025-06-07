@@ -8,12 +8,12 @@ export const router = [
     },
     {
         name: "Cursos",
-        href: "/courses",
+        href: "/cursos",
         icon: Book,
     },
     {
         name: "Mis cursos",
-        href: "/my-courses",
+        href: "/miscursos",
         icon: BookOpen,
     },
     {

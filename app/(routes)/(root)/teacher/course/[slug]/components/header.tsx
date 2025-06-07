@@ -32,7 +32,7 @@ export const CourseHeader = ({
   const handlePublish = async (state: boolean) => {
     setIsLoading(true);
     try {
-      axios.patch(
+       await axios.patch(
         `/api/courses/teacher/${slug}`,
         {
           isPublished: state,
@@ -45,8 +45,10 @@ export const CourseHeader = ({
         state ? "Curso publicado exitosamente 🎉" : "Curso despublicado ⛔"
       );
       router.refresh();
-    } catch {
-      toast("Error al publicar curso");
+    } catch (error: any) {
+      const message = error?.response?.data?.error || "Error al publicar curso";
+    toast.error(message);
+    console.error("Error al publicar curso:", error);
     }
     setIsLoading(false);
   };

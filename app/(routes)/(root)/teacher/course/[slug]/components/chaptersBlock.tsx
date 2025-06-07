@@ -1,6 +1,6 @@
 "use client";
 import { Chapter } from "@prisma/client";
-import { TitleBlock } from "./titleBlock";
+import { TitleBlock } from "../../../../../../../components/Shared/titleBlock";
 import { GripVertical, ListCheck, Loader2, Pencil, PlusCircle, SplinePointer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";

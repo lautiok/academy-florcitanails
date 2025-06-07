@@ -38,14 +38,14 @@ export const FormChaptersName = ({
  
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      axios.post(`/api/courses/teacher/${slug}/chapters`, {
+      const response = await axios.post(`/api/courses/teacher/${slug}/chapters`, {
         title: values.title,
       }, {
         withCredentials: true,
       });
       setChaptersList(false);
       toast("Capítulo agregado exitosamente 🎉");
-      router.refresh();
+      router.push(`/teacher/course/${slug}/${response.data.id}`);
     } catch (error) {
       toast.error("Error al agregar capítulo");
       console.error("Error al agregar capítulo:", error);

@@ -2,9 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-
-
-export async function POST(req: Request)  {
+export async function POST(req: Request) {
   try {
     const session = await auth();
     if (!session) {
@@ -12,10 +10,13 @@ export async function POST(req: Request)  {
     }
 
     if (session.user.role !== "admin") {
-      return NextResponse.json({ error: "No tienes permisos" }, { status: 401 });
+      return NextResponse.json(
+        { error: "No tienes permisos" },
+        { status: 401 }
+      );
     }
 
-    const {id} = session.user
+    const { id } = session.user;
 
     const { title, slug } = await req.json();
 
@@ -23,6 +24,17 @@ export async function POST(req: Request)  {
       return NextResponse.json({ error: "Falta campo" }, { status: 400 });
     }
 
+    const slugRegex = /^[a-z0-9-]+$/;
+    if (!slugRegex.test(slug)) {
+      return NextResponse.json(
+        {
+          error:
+            "Slug no válido. Usa solo letras minúsculas, números y guiones.",
+        },
+        { status: 400 }
+      );
+    }
+    
     const course = await prisma.course.create({
       data: {
         userId: id,

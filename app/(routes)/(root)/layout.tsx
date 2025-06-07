@@ -17,7 +17,6 @@ export default function AppLayout({
           <Footer />
         </div>
       </SidebarProvider>
-      <Toaster />
     </main>
   );
 }

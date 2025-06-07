@@ -1,8 +1,12 @@
-const Home = async () => {
+import { getHomeCourses } from "@/actions/getCourses";
+import { ListCourses } from "@/components/Shared";
+
+export default async function Home() {
+    const listCourses = await getHomeCourses();
+
   return (
-    <div className="flex flex-col ">
+    <div >
+        <ListCourses title="Cursos" courses={listCourses} />
     </div>
   );
 };
-
-export default Home; 
