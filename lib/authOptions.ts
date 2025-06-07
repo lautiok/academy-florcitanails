@@ -108,6 +108,8 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: "/login",
+    error: "/error",
+    newUser: "/auth/setup-profile" 
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
