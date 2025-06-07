@@ -73,6 +73,21 @@ export default function ChapterForm({
       console.error("Error al eliminar capítulo:", error);
     }
   };
+  const onDelete = async () => {
+    try {
+      await axios.delete(
+        `/api/courses/teacher/${slug}/chapters/${chapter.id}/exam`,
+        {
+          withCredentials: true,
+        }
+      );
+      toast("Examen eliminado exitosamente 🎉");
+      router.refresh();
+    } catch (error) {
+      toast.error("Error al eliminar examen");
+      console.error("Error al eliminar examen:", error);
+    }
+  };
   return (
     <div>
       <div className="h-fit flex justify-between items-center">
@@ -142,58 +157,64 @@ export default function ChapterForm({
         documentUrl={documentUrl}
       />
       <div className="p-6 mt-2 bg-white rounded-md border border-slate-200 flex flex-col">
-        <TitleBlock title="Programa de evaluación" icon={FileQuestion} />
-        <ExamForm chapterId={chapter.id} slug={slug} />
-        <div className="mt-6">
-          {exam?.questions.length ? (
-  <div className="mt-6 space-y-4">
-    {exam.questions.map((question, index) => (
-      <div
-        key={question.id}
-        className="p-4 bg-white rounded-md border border-slate-200"
-      >
-        <div className="mb-2">
-          <p className="text-sm font-medium text-slate-800">
-            Pregunta {index + 1}:
-          </p>
-          <p className="text-sm text-slate-700 mt-1">{question.text}</p>
-        </div>
+  <TitleBlock title="Programa de evaluación" icon={FileQuestion} />
+  <div className="mt-6">
+    {exam?.questions.length ? (
+      <div className="space-y-4">
+        <div className="p-6 bg-white rounded-md border border-slate-200">
+          <h3 className="text-base font-semibold text-slate-800 mb-4">
+            Examen del capítulo
+          </h3>
+          <div className="space-y-6">
+            {exam.questions.map((question, index) => (
+              <div key={question.id} className="border-t pt-4">
+                <p className="text-sm font-medium text-slate-800 mb-1">
+                  Pregunta {index + 1}:
+                </p>
+                <p className="text-sm text-slate-700 mb-2">{question.text}</p>
 
-        <div>
-          <p className="text-xs text-slate-600 font-semibold mb-1">
-            Opciones:
-          </p>
-          <ul className="text-sm text-slate-700 space-y-1">
-            {question.options.map((option, i) => (
-              <li
-                key={i}
-                className={`${
-                  option === question.correct
-                    ? "font-semibold text-green-700"
-                    : ""
-                }`}
-              >
-                {option}
-                {option === question.correct && (
-                  <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-                    Correcta
-                  </span>
-                )}
-              </li>
+                <div>
+                  <p className="text-xs text-slate-600 font-semibold mb-1">
+                    Opciones:
+                  </p>
+                  <ul className="text-sm text-slate-700 space-y-1">
+                    {question.options.map((option, i) => (
+                      <li
+                        key={i}
+                        className={`${
+                          option === question.correct
+                            ? "font-semibold text-green-700"
+                            : ""
+                        }`}
+                      >
+                        {option}
+                        {option === question.correct && (
+                          <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+                            Correcta
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             ))}
-          </ul>
+          </div>
+          <Button
+            variant="destructive"
+            className="mt-6 rounded-2xl"
+            onClick={onDelete}
+          >
+            <Trash className="h-4 w-4" />
+            <span className="ml-2">Eliminar examen completo</span>
+          </Button>
         </div>
       </div>
-    ))}
+    ) : (
+      <ExamForm chapterId={chapter.id} slug={slug} />
+    )}
   </div>
-) : (
-  <p className="text-sm text-slate-500 mt-6">
-    No hay preguntas cargadas para este examen.
-  </p>
-)}
-
-        </div>
-      </div>
+</div>
     </div>
   );
 }

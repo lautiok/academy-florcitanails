@@ -91,3 +91,46 @@ export async function POST(
     );
   }
 }
+
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: Promise<{ chapterId: string }> }
+) {
+  try {
+    const { chapterId } = await params;
+
+
+    const session = await auth();
+
+    if (!session?.user.id) {
+      return NextResponse.json(
+        { error: "No tienes permisos para eliminar examenes" },
+        { status: 401 }
+      );
+    }
+
+    const existingExam = await prisma.exam.findUnique({
+      where: { chapterId },
+    });
+
+    if (!existingExam) {
+      return NextResponse.json(
+        { error: "No existe un examen para este capítulo." },
+        { status: 400 }
+      );
+    }
+
+    await prisma.exam.delete({
+      where: { chapterId },
+    });
+
+    return NextResponse.json({ message: "Examen eliminado correctamente" });
+  } catch (error) {
+    console.error("Error al eliminar el examen:", error);
+    return NextResponse.json(
+      { error: "Error interno del servidor" },
+      { status: 500 }
+    );
+  }
+}
