@@ -1,4 +1,4 @@
-import { Book, BookOpen, ChartArea, GraduationCap, Home, User } from "lucide-react";
+import { Book, BookOpen, ChartArea, GraduationCap, Home, ScrollText, User } from "lucide-react";
 
 export const router = [
     {
@@ -20,6 +20,11 @@ export const router = [
         name: "Perfil",
         href: "/profile",
         icon: User,
+    },
+    {
+        name: "Certificados",
+        href: "/certificados",
+        icon: ScrollText,
     }
 ];
 

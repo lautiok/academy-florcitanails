@@ -164,10 +164,24 @@ export default function ChapterForm({
   <div className="mt-6">
     {exam?.questions.length ? (
       <div className="space-y-4">
-        <div className="p-6 bg-white rounded-md border border-slate-200">
-          <h3 className="text-base font-semibold text-slate-800 mb-4">
+        <div className="p-6 bg-white rounded-md border border-slate-200 ">
+         <div className="flex justify-between items-center mb-4">
+           <h3 className="text-base font-semibold text-slate-800 ">
             Examen del capítulo
           </h3>
+           {/* <Button variant={"outline"} className="rounded-2xl" onClick={() => setIsUpdate(true)}>
+            <Pencil className="h-4 w-4" />
+            <span className="m-2">Actualizar examen</span>
+          </Button> */}
+          <Button
+            variant="destructive"
+            className=" rounded-2xl"
+            onClick={onDelete}
+          >
+            <Trash className="h-4 w-4"/>
+            <span className="">Eliminar examen</span>
+          </Button>
+         </div>
           <div className="space-y-6">
             {exam.questions.map((question, index) => (
               <div key={question.id} className="border-t pt-4">
@@ -203,18 +217,6 @@ export default function ChapterForm({
               </div>
             ))}
           </div>
-          <Button variant={"outline"} className="mr-6 rounded-2xl" onClick={() => setIsUpdate(true)}>
-            <Pencil className="h-4 w-4" />
-            <span className="m-2">Actualizar examen</span>
-          </Button>
-          <Button
-            variant="destructive"
-            className=" rounded-2xl"
-            onClick={onDelete}
-          >
-            <Trash className="h-4 w-4" />
-            <span className="ml-2">Eliminar examen</span>
-          </Button>
         </div>
       </div>
     ) : (
