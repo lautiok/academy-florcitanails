@@ -26,7 +26,7 @@ export const HeroBlockCourse = ({
         });
 
         toast("Curso inscrito exitosamente 🎉");
-        router.push(`/course/${course.slug}/${course.chapters[0].id}`);
+        router.push(`/cursos/${course.slug}/${course.chapters[0].id}`);
       } catch (error) {
         toast.error("Error al inscribir al curso");
         console.error("Error al inscribir al curso:", error);

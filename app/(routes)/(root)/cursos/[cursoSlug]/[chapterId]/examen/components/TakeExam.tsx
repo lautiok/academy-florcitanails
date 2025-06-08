@@ -5,18 +5,21 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { Exam, Question } from "@prisma/client";
 import { Card } from "@/components/ui/card";
-import { Loader } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+
 
 interface TakeExamProps {
   chapterId: string;
   exam: (Exam & { questions: Question[] }) | null ;
+  cursoSlug: string;
 }
 
-export const TakeExam = ({ chapterId, exam }: TakeExamProps) => {
+export const TakeExam = ({ chapterId, exam, cursoSlug }: TakeExamProps) => {
   const [answers, setAnswers] = useState<{ [key: string]: string }>({});
   const [result, setResult] = useState<null | { correct: number; total: number; passed: boolean }>(null);
+  const router = useRouter();
 
   const handleSelect = (questionId: string, value: string) => {
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
@@ -52,6 +55,7 @@ export const TakeExam = ({ chapterId, exam }: TakeExamProps) => {
     );
 
     toast.success("Progreso del capítulo guardado ✅");
+    router.push(`/cursos/${cursoSlug}/${chapterId}`);
   } catch (err) {
     toast.error("Error al guardar el progreso");
     console.error("Error al guardar el progreso:", err);
