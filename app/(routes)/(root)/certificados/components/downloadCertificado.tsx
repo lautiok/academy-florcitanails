@@ -9,7 +9,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
@@ -58,6 +57,12 @@ export function DownloadCertificado({
         Descargar certificado
         <Download className="h-4 w-4 ml-2" />
       </Button>
+
+      <div className="hidden">
+        <div ref={certRef}>
+          <Certificado name={name} title={title} cerRef={certRef} />
+        </div>
+      </div>
 
       <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogContent className="w-full !max-w-[1180px] overflow-x-auto">
