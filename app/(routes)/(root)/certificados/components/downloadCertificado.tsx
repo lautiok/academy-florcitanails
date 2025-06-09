@@ -1,5 +1,4 @@
-"use client";
-
+ "use client";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,10 +8,11 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import html2canvas from "html2canvas-pro";
 import { Certificado } from "./Certificado";
 
@@ -24,17 +24,18 @@ export function DownloadCertificado({
   title: string;
 }) {
   const certRef = useRef<HTMLDivElement>(null);
-  const [open, setOpen] = useState(false);
-
   const handleDownload = async () => {
-    if (!certRef.current) return;
+    if (!certRef.current) {
+      return;
+    }
 
     const canvas = await html2canvas(certRef.current, {
-      scale: 2,
+      scale: 2, 
       backgroundColor: null,
       removeContainer: true,
-      useCORS: true,
+      useCORS: true, 
       allowTaint: true,
+      logging: true,
     });
 
     const link = document.createElement("a");
@@ -43,48 +44,28 @@ export function DownloadCertificado({
     link.click();
   };
 
-  const handleClick = () => {
-    if (typeof window !== "undefined" && window.innerWidth < 768) {
-      handleDownload();
-    } else {
-      setOpen(true);
-    }
-  };
-
   return (
-    <>
-      <Button variant="outline" onClick={handleClick}>
-        Descargar certificado
-        <Download className="h-4 w-4 ml-2" />
-      </Button>
-
-      <div
-        ref={certRef}
-        className="absolute top-[-9999px] left-[-9999px] opacity-0 pointer-events-none"
-      >
-        <Certificado name={name} title={title} cerRef={certRef} />
-      </div>
-
-      <AlertDialog open={open} onOpenChange={setOpen}>
-        <AlertDialogContent className="w-full !max-w-[1180px] overflow-x-auto">
-          <AlertDialogHeader>
-            <AlertDialogTitle>Descarga certificado</AlertDialogTitle>
-            <AlertDialogDescription asChild>
-              <div className="w-full flex justify-center overflow-x-auto">
-                <div className="min-w-[1122px]">
-                  <Certificado name={name} title={title} cerRef={certRef} />
-                </div>
-              </div>
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDownload}>
-              Descargar certificado
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button variant={"outline"}>
+          Descargar certificado
+          <Download className="h-4 w-4" />
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent className="w-full !max-w-[1170px]">
+        <AlertDialogHeader>
+          <AlertDialogTitle>Descarga certificado</AlertDialogTitle>
+          <AlertDialogDescription asChild>
+            <Certificado name={name} title={title} cerRef={certRef} />
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={handleDownload}>
+            Descargar certificado
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
