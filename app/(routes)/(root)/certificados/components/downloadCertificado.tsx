@@ -58,10 +58,11 @@ export function DownloadCertificado({
         <Download className="h-4 w-4 ml-2" />
       </Button>
 
-      <div className="hidden">
-        <div ref={certRef}>
-          <Certificado name={name} title={title} cerRef={certRef} />
-        </div>
+      <div
+        ref={certRef}
+        className="absolute top-[-9999px] left-[-9999px] opacity-0 pointer-events-none"
+      >
+        <Certificado name={name} title={title} cerRef={certRef} />
       </div>
 
       <AlertDialog open={open} onOpenChange={setOpen}>
