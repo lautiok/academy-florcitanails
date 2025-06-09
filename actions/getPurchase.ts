@@ -104,3 +104,29 @@ export const getPurchasedHomeCourses = async (
     return null;
   }
 };
+
+export async function getLastPurchasedCourse(limit: number = 10) {
+  const purchases = await prisma.purchase.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: limit,
+    include: {
+      course: {
+        select: {
+          title: true,
+          slug: true,
+          price: true,
+        },
+      },
+      user: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return purchases;
+}
