@@ -1,6 +1,6 @@
 "use client";
 import { FileImage, Pencil } from "lucide-react";
-import { TitleBlock } from "../../../../../../../components/Shared/titleBlock";
+import { TitleBlock } from "../../../../../../components/Shared/titleBlock";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { UploadButton } from "@/utils/uploadthing";

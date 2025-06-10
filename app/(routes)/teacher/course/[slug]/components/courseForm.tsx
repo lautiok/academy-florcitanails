@@ -1,5 +1,5 @@
 "use client";
-import { TitleBlock } from "../../../../../../../components/Shared/titleBlock";
+import { TitleBlock } from "../../../../../../components/Shared/titleBlock";
 import { Cog } from "lucide-react";
 import { CourseFormPropType } from "./courseForm.type";
 import { z } from "zod";
