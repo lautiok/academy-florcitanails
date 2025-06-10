@@ -24,7 +24,7 @@ export function AppSidebar() {
       <SidebarContent className="bg-white border-r-2 border-[#f4dfe2]  ">
         <SidebarHeader >
           <Link href="/" className="flex items-center gap-2 text-xl font-semibold">
-            <Image src="/logo.jpg" alt="Logo" width={35} height={35} className="rounded-md" />
+            <Image src="/logo.png" alt="Logo" width={35} height={35} className="rounded-md" />
             {state === "expanded" && <span className="text-xl font-semibold">FlorcitaNailss</span>}
           </Link>
         </SidebarHeader>
