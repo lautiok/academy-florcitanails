@@ -14,82 +14,108 @@ type CourseWithChaptersAndDocs = Course & {
   })[];
 };
 
-export const getHomeCourses = async (): Promise<(Course & { chapters: Chapter[] })[] | null> => {
-    try {
-        const courses = await prisma.course.findMany({
-            where: {
-                isPublished: true,
-            },
-            orderBy: {
-                createdAt: "desc",
-            },
-            take: 4,
-            include: {
-                chapters: {
-                    where: {
-                        isPublished: true,
-                    },
-                }
-            },
-        });
+export const getHomeCourses = async (): Promise<
+  (Course & { chapters: Chapter[] })[] | null
+> => {
+  try {
+    const courses = await prisma.course.findMany({
+      where: {
+        isPublished: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 4,
+      include: {
+        chapters: {
+          where: {
+            isPublished: true,
+          },
+        },
+      },
+    });
 
-        return courses;
-    } catch (error) {
-        console.error("Error al obtener cursos de inicio:", error);
-        return null;
-    }
-}
+    return courses;
+  } catch (error) {
+    console.error("Error al obtener cursos de inicio:", error);
+    return null;
+  }
+};
 
-export const getCourses = async (): Promise<(Course & { chapters: Chapter[] })[] | null> => {
-    try {
-        const courses = await prisma.course.findMany({
-            where: {
-                isPublished: true,
-            },
-            orderBy: {
-                createdAt: "desc",
-            },
-            include: {
-                chapters: {
-                    where: {
-                        isPublished: true,
-                    },
-                }
-            },
-        });
+export const getCourses = async (): Promise<
+  (Course & { chapters: Chapter[] })[] | null
+> => {
+  try {
+    const courses = await prisma.course.findMany({
+      where: {
+        isPublished: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        chapters: {
+          where: {
+            isPublished: true,
+          },
+        },
+      },
+    });
 
-        return courses;
-    } catch (error) {
-        console.error("Error al obtener cursos de inicio:", error);
-        return null;
-    }
-}
+    return courses;
+  } catch (error) {
+    console.error("Error al obtener cursos de inicio:", error);
+    return null;
+  }
+};
 
-export const getCourse = async (slug: string): Promise<CourseWithChaptersAndDocs | null> => {
+export const getCourse = async (
+  slug: string
+): Promise<CourseWithChaptersAndDocs | null> => {
+  try {
+    const course = await prisma.course.findUnique({
+      where: {
+        slug: slug,
+      },
+      include: {
+        chapters: {
+          where: {
+            isPublished: true,
+          },
+          include: {
+            documentUrl: true,
+          },
+          orderBy: {
+            position: "asc",
+          },
+        },
+      },
+    });
+    return course;
+  } catch (error) {
+    console.error("Error al obtener cursos de inicio:", error);
+    return null;
+  }
+};
 
-
-    try {
-        const course = await prisma.course.findUnique({
-            where: {
-                slug: slug,
-            },
-            include: {
-                chapters: {
-                    where: {
-                        isPublished: true,
-                    },
-                    include: {
-                        documentUrl: true,
-                    },
-                    orderBy: {
-                            position: "asc",
-                        },
-                }
-            },
-        });
-        return course;
-    } catch (error) {
-        console.error("Error al obtener cursos de inicio:", error);
-        return null;
-    }
-}
+export const getSerchCourses = async (
+  query: string
+): Promise<(Course & { chapters: Chapter[] })[] | null> => {
+  try {
+    const courses = await prisma.course.findMany({
+      where: {
+        title: {
+          contains: query,
+          mode: "insensitive",
+        },
+      },
+      include: {
+        chapters: true,
+      },
+    });
+    return courses;
+  } catch (error) {
+    console.error("Error al obtener cursos de inicio:", error);
+    return null;
+  }
+};
