@@ -14,7 +14,9 @@ export default async function Home() {
 
   return (
     <div>
-      <ListCourses title="Mis cursos" courses={coursesPurchased} />
+      {Array.isArray(coursesPurchased) && coursesPurchased.length > 0 && (
+        <ListCourses title="Mis cursos" courses={coursesPurchased} />
+      )}
       <ListCourses title="Ultimos cursos" courses={listCourses} />
     </div>
   );

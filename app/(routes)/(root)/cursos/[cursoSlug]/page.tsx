@@ -2,14 +2,25 @@ import { getCourse } from "@/actions/getCourses";
 import { BreadCrumbCourse, CourseContent, HeroBlockCourse } from "./components";
 import { getPurchaseCourseById } from "@/actions/getPurchase";
 import { auth } from "@/lib/auth";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Curso | Academy Florcitanails",
+  description: "Plataforma de aprendizaje en línea para los estudiantes de la Academia de Florcitanails",
+};
+
 
 export default async function cursosSlug({
   params,
 }: {
   params: Promise<{ cursoSlug: string }>;
 }) {
+
+
   const { cursoSlug } = await params;
   const curse = await getCourse(cursoSlug);
+
+
 
   if (!curse) {
     return <div>Curso no encontrado</div>;

@@ -2,6 +2,13 @@ import { CourseForm, CourseHeader, CourseImage, CoursePrice } from "./components
 import { prisma } from "@/lib/prisma";
 import ChaptersBlock from "./components/chaptersBlock";
 import { auth } from "@/lib/auth";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Editar curso | Profesor | Academy Florcitanails",
+  description: "Plataforma de aprendizaje en línea para los estudiantes de la Academia de Florcitanails",
+};
+
 
 export default async function CoursePage({
   params,

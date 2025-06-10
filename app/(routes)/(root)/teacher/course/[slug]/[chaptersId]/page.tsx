@@ -1,6 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import ChapterForm from "./components/chapterForm";
 import { auth } from "@/lib/auth";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Editar capítulo | Profesor | Academy Florcitanails",
+  description: "Plataforma de aprendizaje en línea para los estudiantes de la Academia de Florcitanails",
+};
 export default async function ChapterPage({
   params,
 }   : {

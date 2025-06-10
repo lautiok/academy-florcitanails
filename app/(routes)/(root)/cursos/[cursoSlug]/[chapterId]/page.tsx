@@ -4,7 +4,13 @@ import { getUserProgress } from "@/actions/getUserProgress";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { ChaptersCourse, InfoCourse } from "./components";
-import { UserProgress } from "@prisma/client";
+import { Metadata } from "next";
+
+
+export const metadata: Metadata = {
+  title: "Capítulo | Academy Florcitanails",
+  description: "Plataforma de aprendizaje en línea para los estudiantes de la Academia de Florcitanails",
+};
 
 export default async function CharterCourse({
   params,

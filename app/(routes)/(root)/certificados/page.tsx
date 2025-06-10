@@ -3,6 +3,12 @@ import { getUserProgressByCourse } from "@/actions/getUserProgress"
 import { auth } from "@/lib/auth"
 import { Award } from "lucide-react"
 import { ListCertificate } from "./components"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Certificados | Academy Florcitanails",
+  description: "Plataforma de aprendizaje en línea para los estudiantes de la Academia de Florcitanails",
+};
 
 export default async function CertificadosPage() {
     const session = await auth()
