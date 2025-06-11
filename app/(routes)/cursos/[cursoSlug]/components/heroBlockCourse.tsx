@@ -4,18 +4,28 @@ import { formatPrice } from "@/utils/formatPrice";
 import { Chapter, Course } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { ModalInscription } from "./modalInscription";
 
 export const HeroBlockCourse = ({
   course,
   PurchasedCourse,
+  slug,
 }: {
   course: Course & { chapters: Chapter[] };
   PurchasedCourse: boolean;
+  slug: string;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isModal, setIsModal] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (course.category === "presencial") {
+      setIsModal(true);
+    }
+  }, [course.category]);
 
   const handleRollCourse = async () => {
     setIsLoading(true);
@@ -35,10 +45,13 @@ export const HeroBlockCourse = ({
       }
     } else {
       try {
-        const response = await axios.post(`/api/courses/${course.slug}/checkout`, {
-        withCredentials: true,
-      });
-      
+        const response = await axios.post(
+          `/api/courses/${course.slug}/checkout`,
+          {
+            withCredentials: true,
+          }
+        );
+
         window.location.assign(response.data);
       } catch (error) {
         toast.error("Error al inscribir al curso");
@@ -62,7 +75,21 @@ export const HeroBlockCourse = ({
           {formatPrice(course.price)}
         </h3>
 
-        {PurchasedCourse ? (
+        {isModal ? (
+          PurchasedCourse ? (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                router.push(`/cursos/${course.slug}/${course.chapters[0].id}`)
+              }
+            >
+              Ver curso
+            </Button>
+          ) : (
+            <ModalInscription data={course} slug={slug} />
+          )
+        ) : PurchasedCourse ? (
           <Button
             variant="outline"
             size="sm"
@@ -70,7 +97,6 @@ export const HeroBlockCourse = ({
               router.push(`/cursos/${course.slug}/${course.chapters[0].id}`)
             }
           >
-            {" "}
             Ver curso
           </Button>
         ) : (

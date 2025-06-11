@@ -37,7 +37,7 @@ export default async function cursosSlug({
     <div className="max-w-6xl mx-auto">
         <div className="my-4 mx-6 border rounded-lg border-slate-200 p-6">
             <BreadCrumbCourse title={curse.title} />
-            <HeroBlockCourse course={curse} PurchasedCourse={Purchased} />
+            <HeroBlockCourse course={curse} PurchasedCourse={Purchased} slug={cursoSlug} />
         </div>
         <div className="my-4 mx-6 border rounded-lg border-slate-200 p-6">
                 <CourseContent chapters={curse.chapters} />

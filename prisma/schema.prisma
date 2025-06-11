@@ -102,6 +102,7 @@ model Course {
 
   chapters Chapter[]
   purchases Purchase[]
+  formPresencial FormPresencial[]
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -185,4 +186,15 @@ model DocumentUrl {
   updatedAt   DateTime @updatedAt
 
   @@unique([chapterId, documentUrl])
+}
+
+model FormPresencial {
+  id          String   @id @default(cuid())
+  userEmail   String
+  userName    String
+  courseId    String
+  phone       String
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
