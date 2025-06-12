@@ -1,14 +1,18 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { BellRing, Search } from "lucide-react";
+import {  Search } from "lucide-react";
 import { UserButton } from "./userButtons";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { NotificationButton } from "./notificationButton";
 
-export const NavBar = () => {
+export const NavBar = ({
+  userId,
+}: {
+  userId: string;
+}) => {
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
 
@@ -33,9 +37,7 @@ export const NavBar = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </form>
-        <Button variant={"outline"}>
-          <BellRing />
-        </Button>
+        <NotificationButton userId={userId} />
         <UserButton />
       </div>
     </div>
