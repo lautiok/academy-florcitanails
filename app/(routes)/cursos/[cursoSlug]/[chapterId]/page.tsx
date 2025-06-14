@@ -1,6 +1,6 @@
-import { getCourse } from "@/actions/getCourses";
-import { getPurchaseCourseById } from "@/actions/getPurchase";
-import { getUserProgress } from "@/actions/getUserProgress";
+import { getCourse } from "@/dal/Courses";
+import { getPurchaseCourseById } from "@/dal/Purchase";
+import { getUserProgress } from "@/dal/UserProgress";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { ChaptersCourse, InfoCourse } from "./components";

@@ -1,6 +1,6 @@
-import { getCourse } from "@/actions/getCourses";
+import { getCourse } from "@/dal/Courses";
 import { BreadCrumbCourse, CourseContent, HeroBlockCourse } from "./components";
-import { getPurchaseCourseById } from "@/actions/getPurchase";
+import { getPurchaseCourseById } from "@/dal/Purchase";
 import { auth } from "@/lib/auth";
 import { Metadata } from "next";
 

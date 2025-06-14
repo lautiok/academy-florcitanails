@@ -1,5 +1,6 @@
+import { getSuscribersbyMonth } from "@/dal/Purchase";
 import { NextResponse } from "next/server";
-import { getSuscribersbyMonth } from "@/actions/getSuscriberts";
+
 
 export async function GET() {
     try {

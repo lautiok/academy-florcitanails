@@ -1,4 +1,4 @@
-import { getFormPresencials } from "@/actions/getFormPresencial";
+import { getFormPresencials } from "@/dal/FormPresencial";
 import FuturePresencialClient from "./FuturePresencialClient";
 
 export default async function FuturePresencial() {

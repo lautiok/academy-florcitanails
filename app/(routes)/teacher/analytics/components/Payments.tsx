@@ -1,4 +1,4 @@
-import { getLastPurchasedCourse } from "@/actions/getPurchase";
+import { getLastPurchasedCourse } from "@/dal/Purchase";
 import { DataTable } from "./data-table";
 import { columns, Payment } from "./columns";
 

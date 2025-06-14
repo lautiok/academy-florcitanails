@@ -1,4 +1,4 @@
-import { GetExam } from "@/actions/getExam";
+import { GetExam } from "@/dal/Exam";
 import { TakeExam } from "./components";
 import { Metadata } from "next";
 

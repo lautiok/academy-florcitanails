@@ -1,4 +1,4 @@
-import { getPurchasedHomeCourses } from "@/actions/getPurchase";
+import { getPurchasedHomeCourses } from "@/dal/Purchase";
 import { ListCourses } from "@/components/Shared";
 import { auth } from "@/lib/auth"
 

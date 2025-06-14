@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { deleteFormPresencial } from "@/actions/deleteFormPresencial"
+import { deleteFormPresencial } from "@/dal/FormPresencial"
 import { DataTable } from "../../analytics/components/data-table"
 import { Payment } from "./data-table"
 import { columns } from "./columns"

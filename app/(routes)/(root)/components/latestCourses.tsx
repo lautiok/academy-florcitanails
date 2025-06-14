@@ -1,4 +1,4 @@
-import { getHomeCourses } from "@/actions/getCourses";
+import { getHomeCourses } from "@/dal/Courses";
 import { ListCourses } from "@/components/Shared";
 
 export async function LatestCourses() {

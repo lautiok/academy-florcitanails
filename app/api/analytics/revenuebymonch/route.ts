@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getRevenuesByMonth } from "@/actions/getRevenues";
+import { getRevenuesByMonth } from "@/dal/Purchase";
 
 export async function GET() {
     try {

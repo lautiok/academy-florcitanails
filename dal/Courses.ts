@@ -1,5 +1,7 @@
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Course, Chapter } from "@prisma/client";
+import { redirect } from "next/navigation";
 
 type CourseWithChaptersAndDocs = Course & {
   chapters: (Chapter & {
@@ -17,6 +19,11 @@ type CourseWithChaptersAndDocs = Course & {
 export const getHomeCourses = async (): Promise<
   (Course & { chapters: Chapter[] })[] | null
 > => {
+  
+  const session = await auth();
+  if (!session) {
+    redirect("/login");
+  }
   try {
     const courses = await prisma.course.findMany({
       where: {
@@ -45,7 +52,13 @@ export const getHomeCourses = async (): Promise<
 export const getCourses = async (): Promise<
   (Course & { chapters: Chapter[] })[] | null
 > => {
+  
+  const session = await auth();
+  if (!session) {
+    redirect("/login");
+  }
   try {
+    
     const courses = await prisma.course.findMany({
       where: {
         isPublished: true,
@@ -72,6 +85,11 @@ export const getCourses = async (): Promise<
 export const getCourse = async (
   slug: string
 ): Promise<CourseWithChaptersAndDocs | null> => {
+  
+  const session = await auth();
+  if (!session) {
+    redirect("/login");
+  }
   try {
     const course = await prisma.course.findUnique({
       where: {
@@ -101,6 +119,11 @@ export const getCourse = async (
 export const getSerchCourses = async (
   query: string
 ): Promise<(Course & { chapters: Chapter[] })[] | null> => {
+  
+  const session = await auth();
+  if (!session) {
+    redirect("/login");
+  }
   try {
     const courses = await prisma.course.findMany({
       where: {

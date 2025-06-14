@@ -1,5 +1,5 @@
-import { getPurchasedCourses } from "@/actions/getPurchase"
-import { getUserProgressByCourse } from "@/actions/getUserProgress"
+import { getPurchasedCourses } from "@/dal/Purchase"
+import { getUserProgressByCourse } from "@/dal/UserProgress"
 import { auth } from "@/lib/auth"
 import { Award } from "lucide-react"
 import { ListCertificate } from "./components"

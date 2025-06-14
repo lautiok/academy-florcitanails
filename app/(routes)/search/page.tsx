@@ -1,4 +1,4 @@
-import { getSerchCourses } from "@/actions/getCourses";
+import { getSerchCourses } from "@/dal/Courses";
 import { ListCourses } from "@/components/Shared";
 
 export default async function SearchPage({

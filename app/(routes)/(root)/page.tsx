@@ -1,13 +1,7 @@
-import { auth } from "@/lib/auth";
 import { Suspense } from "react";
 import { LatestCourses, PurchasedCourses } from "./components";
 import { ListCoursesSkeleton } from "@/components/Skeleton/ListCoursesSkeleton";
 export default async function Home() {
-  const session = await auth();
-
-  if (!session) {
-    return <div>No tienes sesión</div>;
-  }
   return (
     <div>
       <Suspense fallback={<ListCoursesSkeleton title="Mis cursos"/>}>

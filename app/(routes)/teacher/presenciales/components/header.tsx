@@ -6,10 +6,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus } from "lucide-react";
 import { FormIncriptionPurchase } from "./formPurchase";
-import { getCourses } from "@/actions/getCourses";
-import { getUsers } from "@/actions/getUsers";
+import { getCourses } from "@/dal/Courses";
+import { getUsers } from "@/dal/Users";
 
 
 export const PresencialesHeader = async () => {

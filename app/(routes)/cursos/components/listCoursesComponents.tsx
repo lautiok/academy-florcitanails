@@ -1,4 +1,4 @@
-import { getCourses } from "@/actions/getCourses";
+import { getCourses } from "@/dal/Courses";
 import { ListCourses } from "@/components/Shared";
 
 export async function ListCoursesComponents() {
