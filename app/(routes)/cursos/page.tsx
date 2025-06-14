@@ -1,6 +1,7 @@
-import { getCourses } from "@/actions/getCourses";
-import { ListCourses } from "@/components/Shared";
 import { Metadata } from "next";
+import { ListCoursesComponents } from "./components/listCoursesComponents";
+import { Suspense } from "react";
+import { ListCoursesSkeleton } from "@/components/Skeleton/ListCoursesSkeleton";
 
 export const metadata: Metadata = {
   title: "Cursos | Academy Florcitanails",
@@ -9,10 +10,11 @@ export const metadata: Metadata = {
 
 export default async function CursosPage() {
 
-    const listCourses = await getCourses();
     return (
         <div>
-            <ListCourses title="Todos los cursos" courses={listCourses} />
+            <Suspense fallback={<ListCoursesSkeleton title="Todos los cursos"/>}>
+                <ListCoursesComponents/>
+            </Suspense>
         </div>
     );
 }
