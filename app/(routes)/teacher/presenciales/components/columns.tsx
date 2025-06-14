@@ -1,8 +1,7 @@
-"use client"
-
 import { Course } from "@prisma/client"
 import { ColumnDef } from "@tanstack/react-table"
-
+import { Button } from "@/components/ui/button"
+import { Trash } from "lucide-react"
 
 export type Payment = {
   id: string
@@ -12,7 +11,7 @@ export type Payment = {
   course: Course
 }
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns = (onDelete: (id: string) => void): ColumnDef<Payment>[] => [
   {
     accessorKey: "userName",
     header: "Nombre",
@@ -28,5 +27,19 @@ export const columns: ColumnDef<Payment>[] = [
   {
     accessorKey: "course.title",
     header: "Curso",
+    cell: ({ row }) => row.original.course.title,
+  },
+  {
+    id: "actions",
+    header: "Acciones",
+    cell: ({ row }) => (
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => onDelete(row.original.id)}
+      >
+        <Trash className="h-4 w-4" />
+      </Button>
+    ),
   },
 ]
