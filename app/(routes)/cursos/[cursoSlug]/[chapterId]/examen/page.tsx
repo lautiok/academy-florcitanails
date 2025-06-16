@@ -1,6 +1,7 @@
-import { GetExam } from "@/dal/Exam";
-import { TakeExam } from "./components";
 import { Metadata } from "next";
+import { Suspense } from "react";
+import { TakeExamSkeleton } from "@/components/Skeleton/TakeExamSkeleton";
+import { ChapterCourseExamContent } from "./components/chapterCourseExamContent";
 
 export const metadata: Metadata = {
   title: "Examen | Teacher | Academy Florcitanails",
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 
-export default async function CharterCourse({
+export default async function CharterCourseExam({
   params,
 }: {
   params: Promise<{ cursoSlug: string; chapterId: string }>;
@@ -16,11 +17,12 @@ export default async function CharterCourse({
   const { chapterId, cursoSlug } = await params;
 
 
-  const exam = await GetExam(chapterId);
 
   return (
     <div className="p-6">
-      <TakeExam chapterId={chapterId} exam={exam} cursoSlug={cursoSlug} />
+      <Suspense fallback={<TakeExamSkeleton />}>
+        <ChapterCourseExamContent chapterId={chapterId} cursoSlug={cursoSlug} />
+      </Suspense>
     </div>
   );
 }

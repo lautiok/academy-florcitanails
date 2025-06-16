@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { BreadCrumbCourse, CourseContent, HeroBlockCourse } from "./components";
 import { Metadata } from "next";
 import { CoursePageContent } from "./components/CoursePageContent";
 import { BreadCrumbCourseSkeleton } from "@/components/Skeleton/BreadCrumbSkeleton";
