@@ -51,10 +51,6 @@ export const getHomeCourses = async (): Promise<
 export const getCourses = async (): Promise<
   (Course & { chapters: Chapter[] })[] | null
 > => {
-  const session = await auth();
-  if (!session) {
-    redirect("/login");
-  }
   try {
     const courses = await prisma.course.findMany({
       where: {
