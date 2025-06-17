@@ -1,20 +1,19 @@
 import { Course } from "@prisma/client";
 import { CardCourse } from "./cardCourse";
+import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
-export const CourseTeacher = ({
-  courses,
-}: {
-  courses: Course[];
-}) => {
+export const CourseTeacher = async () => {
 
-
-  if (courses.length === 0) {
-    return (
-      <div className="flex flex-col my-4 mx-6 border rounded-lg p-4 gap-10">
-        <p className="text-center text-gray-500">No hay cursos creados</p>
-      </div>
-    );
-  }
+   const session = await auth();
+  
+      if (!session) {
+        return <div>No tienes sesión</div>;
+      }
+      
+      const courses = await prisma.course.findMany({
+        where: { userId: session.user.id },
+      });
 
   return (
     <div className="flex flex-col my-4 mx-6 border rounded-lg p-4 gap-10">

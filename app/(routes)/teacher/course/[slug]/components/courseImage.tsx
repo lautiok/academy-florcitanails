@@ -5,7 +5,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { UploadButton } from "@/utils/uploadthing";
 import { toast } from "sonner";
-import { on } from "events";
 import axios from "axios";
 
 export const CourseImage = ({ slug, imageUrl }: { slug: string; imageUrl: string | null }) => {

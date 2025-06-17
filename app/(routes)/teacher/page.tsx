@@ -1,8 +1,8 @@
 
-import { prisma } from "@/lib/prisma";
 import { CourseTeacher, TeacherHeader } from "./components";
-import { getServerSession } from "next-auth"
 import { Metadata } from "next";
+import { Suspense } from "react";
+import { CourseTeacherSkeleton } from "@/components/Skeleton/CourseTeacherSkeleton";
 
 export const metadata: Metadata = {
   title: "Cursos | Profesor | Academy Florcitanails",
@@ -10,20 +10,12 @@ export const metadata: Metadata = {
 };
 
 export default async function Teacher() {
-    const session = await getServerSession();
-
-    if (!session) {
-      return <div>No tienes sesión</div>;
-    }
-    
-    const courses = await prisma.course.findMany({
-      where: { userId: session.user.id },
-    });
-
   return (
     <div>
       <TeacherHeader />
-      <CourseTeacher courses={courses} />
+      <Suspense fallback={<CourseTeacherSkeleton />}>
+        <CourseTeacher  />
+      </Suspense>
     </div>
   );
 } 

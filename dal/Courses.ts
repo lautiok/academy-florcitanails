@@ -19,7 +19,6 @@ type CourseWithChaptersAndDocs = Course & {
 export const getHomeCourses = async (): Promise<
   (Course & { chapters: Chapter[] })[] | null
 > => {
-  
   const session = await auth();
   if (!session) {
     redirect("/login");
@@ -52,13 +51,11 @@ export const getHomeCourses = async (): Promise<
 export const getCourses = async (): Promise<
   (Course & { chapters: Chapter[] })[] | null
 > => {
-  
   const session = await auth();
   if (!session) {
     redirect("/login");
   }
   try {
-    
     const courses = await prisma.course.findMany({
       where: {
         isPublished: true,
@@ -85,7 +82,6 @@ export const getCourses = async (): Promise<
 export const getCourse = async (
   slug: string
 ): Promise<CourseWithChaptersAndDocs | null> => {
-  
   const session = await auth();
   if (!session) {
     redirect("/login");
@@ -119,7 +115,6 @@ export const getCourse = async (
 export const getSerchCourses = async (
   query: string
 ): Promise<(Course & { chapters: Chapter[] })[] | null> => {
-  
   const session = await auth();
   if (!session) {
     redirect("/login");
@@ -139,6 +134,43 @@ export const getSerchCourses = async (
     return courses;
   } catch (error) {
     console.error("Error al obtener cursos de inicio:", error);
+    return null;
+  }
+};
+
+export const getCourseBySlugUser = async (
+  slug: string,
+  userId: string
+): Promise<(Course & { chapters: Chapter[] }) | null> => {
+  try {
+
+    const session = await auth();
+
+    if (!session) {
+      redirect("/login");
+    }
+
+    if (session.user.role !== "admin") {
+      return null;
+    }
+
+    const course = await prisma.course.findUnique({
+      where: {
+        slug,
+        userId: userId,
+      },
+      include: {
+        chapters: {
+          orderBy: {
+            position: "asc",
+          },
+        },
+      },
+    });
+
+    return course;
+  } catch {
+    console.error("Error al obtener cursos de inicio:");
     return null;
   }
 };
