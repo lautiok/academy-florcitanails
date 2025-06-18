@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import axios from "axios";
+import { ChangePassword } from "./changePassword";
 
 export function ProfileForm({ user }: { user: any }) {
   const [name, setName] = useState(user.name || "");
@@ -21,7 +22,6 @@ export function ProfileForm({ user }: { user: any }) {
       });
 
       toast.success("Perfil actualizado correctamente 🎉");
-      
     } catch (error) {
       toast.error("Error al actualizar el perfil");
       console.error(error);
@@ -33,11 +33,7 @@ export function ProfileForm({ user }: { user: any }) {
   return (
     <div className="p-6 bg-white rounded-md border border-slate-200 mt-6">
       <div className="flex items-center gap-4 mb-6 mt-4">
-        <img 
-          src={user.image} 
-          alt="avatar" 
-          className="h-12 w-12 rounded-full"
-          />
+        <img src={user.image} alt="avatar" className="h-12 w-12 rounded-full" />
         <div>
           <p className="text-sm text-slate-600">Rol:</p>
           <p className="text-sm font-semibold text-slate-800 capitalize">
@@ -75,10 +71,15 @@ export function ProfileForm({ user }: { user: any }) {
           />
         </div>
 
-        <Button variant="outline" type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Guardando..." : "Guardar cambios"}
-        </Button>
+        <div className="flex mt-6 gap-2">
+          <Button variant="outline" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Guardando..." : "Guardar cambios"}
+          </Button>
+        </div>
       </form>
+      <div className="mt-6">
+        <ChangePassword />
+      </div>
     </div>
   );
 }
