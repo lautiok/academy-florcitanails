@@ -21,7 +21,6 @@ type TotalRevenuesProps = {
   revenue: number;
 };
 
-
 const chartConfig = {
   desktop: {
     label: "Desktop",
@@ -30,65 +29,68 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function TotalRevenues() {
-    const [data, setData] = useState<TotalRevenuesProps[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState<TotalRevenuesProps[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get("/api/analytics/revenuebymonch");
-                setData(response.data);
-            } catch (error) {
-                console.error(error);
-                setIsLoading(false);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        fetchData();
-    }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/api/analytics/revenuebymonch");
+        setData(response.data);
+      } catch (error) {
+        console.error(error);
+        setIsLoading(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
   return (
     <Card>
       <CardHeader>
         <CardTitle>Total de los pagos</CardTitle>
-        <CardDescription>Total de los pagos de los últimos 6 meses</CardDescription>
+        <CardDescription>
+          Total de los pagos de los últimos 6 meses
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
-          <LineChart
-            accessibilityLayer
-            data={data}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
-          >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
-            />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
-            <Line
-              dataKey="revenue"
-              type="natural"
-              stroke="var(--color-desktop)"
-              strokeWidth={2}
-              dot={{
-                fill: "var(--color-desktop)",
-              }}
-              activeDot={{
-                r: 6,
-              }}
-            />
-          </LineChart>
-        </ChartContainer>
+        {isLoading ? (
+          <div className="h-60 animate-pulse space-y-4 p-4">
+            <div className="h-6 w-1/3 bg-gray-300 rounded" />
+            <div className="h-4 w-2/3 bg-gray-200 rounded" />
+            <div className="h-40 bg-gray-100 rounded" />
+          </div>
+        ) : (
+          <ChartContainer config={chartConfig}>
+            <LineChart
+              accessibilityLayer
+              data={data}
+              margin={{ left: 12, right: 12 }}
+            >
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="month"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                tickFormatter={(value) => value.slice(0, 3)}
+              />
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent hideLabel />}
+              />
+              <Line
+                dataKey="revenue"
+                type="natural"
+                stroke="var(--color-desktop)"
+                strokeWidth={2}
+                dot={{ fill: "var(--color-desktop)" }}
+                activeDot={{ r: 6 }}
+              />
+            </LineChart>
+          </ChartContainer>
+        )}
       </CardContent>
     </Card>
   );

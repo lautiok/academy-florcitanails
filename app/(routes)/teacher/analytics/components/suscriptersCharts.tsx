@@ -48,7 +48,6 @@ export const SuscriptersCharts = () => {
     fetchData();
   }, []);
 
-
   return (
     <Card>
       <CardHeader>
@@ -56,24 +55,32 @@ export const SuscriptersCharts = () => {
         <CardDescription>Suscriptores de los últimos 6 meses</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={data}>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
-            />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
-            <Bar dataKey="users" fill="var(--color-desktop)" radius={8} />
-          </BarChart>
-        </ChartContainer>
+        {isLoading ? (
+          <div className="h-60 animate-pulse space-y-4 p-4">
+            <div className="h-6 w-1/3 bg-gray-300 rounded" />
+            <div className="h-4 w-2/3 bg-gray-200 rounded" />
+            <div className="h-40 bg-gray-100 rounded" />
+          </div>
+        ) : (
+          <ChartContainer config={chartConfig}>
+            <BarChart accessibilityLayer data={data}>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="month"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+                tickFormatter={(value) => value.slice(0, 3)}
+              />
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent hideLabel />}
+              />
+              <Bar dataKey="users" fill="var(--color-desktop)" radius={8} />
+            </BarChart>
+          </ChartContainer>
+        )}
       </CardContent>
     </Card>
   );
-}
+};

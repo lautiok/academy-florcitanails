@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 import { Payments, SuscriptersCharts, TotalRevenues } from "./components";
+import { Suspense } from "react";
+import { PaymentsSkeleton } from "@/components/Skeleton/PaymentsSkeleton";
 export const metadata: Metadata = {
   title: "Analiticas | Profesor | Academy Florcitanails",
   description:
@@ -13,7 +15,9 @@ export default function Analytics() {
         <SuscriptersCharts />
         <TotalRevenues />
       </div>
-      <Payments />
+      <Suspense fallback={<PaymentsSkeleton />}>
+        <Payments />
+        </Suspense>
     </div>
   );
 }
