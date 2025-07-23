@@ -15,7 +15,7 @@ export default function FuturePresencialClient({ data }: { data: Payment[] }) {
   }
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto">
       <DataTable columns={columns(handleDelete)} data={data}/>
     </div>
   )

@@ -16,7 +16,7 @@ export async function PATCH(
     const { slug } = await params;
 
     const values = await req.json();
-    console.log(values);
+    console.log(values);  
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

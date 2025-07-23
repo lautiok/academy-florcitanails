@@ -1,15 +1,14 @@
 import { Suspense } from "react";
-import { Nav, PresencialesHeader } from "./components";
-import FuturePresencial from "./components/FuturePresencial";
 import { PresencialesSkeleton } from "@/components/Skeleton/PresencialesSkeleton";
+import { Nav, Presenciales, PresencialesHeader } from "../components";
 
-export default function TeacherPresenciales() {
+export default function ListPresenciales() {
   return (
     <div className="p-6">
       <PresencialesHeader />
       <Nav />
        <Suspense fallback={<PresencialesSkeleton  />}>
-        <FuturePresencial />
+            <Presenciales />
       </Suspense>
     </div>
   );

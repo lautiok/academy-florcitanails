@@ -1,5 +1,7 @@
 import { getFormPresencials } from "@/dal/FormPresencial";
 import FuturePresencialClient from "./FuturePresencialClient";
+import { TitleBlock } from "@/components/Shared";
+import { BellRing } from "lucide-react";
 
 export default async function FuturePresencial() {
   const data = await getFormPresencials();
@@ -8,5 +10,10 @@ export default async function FuturePresencial() {
     return <div>No hay formularios presenciales</div>
   }
 
-  return <FuturePresencialClient data={data} />
-}
+  return (
+      <div className="p-6">
+        <TitleBlock title="Notificaciones" icon={BellRing} />
+        <FuturePresencialClient data={data} />
+      </div>
+  )
+} 

@@ -30,12 +30,8 @@ export function DownloadCertificado({
     }
 
     const canvas = await html2canvas(certRef.current, {
-      scale: 2, 
-      backgroundColor: null,
-      removeContainer: true,
+      scale: 6, 
       useCORS: true, 
-      allowTaint: true,
-      logging: true,
     });
 
     const link = document.createElement("a");
